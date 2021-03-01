@@ -27,6 +27,11 @@ while True:
   album = makeAlbum(artistName, albumTitle)
   print(album)
 
+  # NOTE: Dicitionaly keys can be printed out by calling
+  # the variable and the key in brackets.
+  # print(album['albumTitle'])
+  # print(album['artistName'])
+
 print("\nThanks for responding!")
 
 
