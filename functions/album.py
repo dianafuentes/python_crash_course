@@ -8,17 +8,37 @@ def makeAlbum(artistName, albumTitle, songs=0):
   }
   if songs:
     albums['songs'] = songs 
-  return(albums)
+  return(albums) 
+
+#write a while loop that allows users to enter an album and artist. 
+while True: 
+  print("\n Enter an album name")
+  print(" & Enter an artist name")
+  print("ENTER 'q' AT ANY TIME TO QUIT")
+  
+  albumTitle = input("Album name:")
+  if albumTitle == 'q':
+    break 
+  
+  artistName = input("Artist name:")
+  if artistName == 'q':
+    break 
+
+  album = makeAlbum(artistName, albumTitle)
+  print(album)
+
+print("\nThanks for responding!")
 
 
 
 
-albumOne = makeAlbum('john lennon', 'imagine')
-print(albumOne) 
 
-albumtwo = makeAlbum('alejandro fernandez', 'hecho en mexico')
-print(albumtwo) 
+#albumOne = makeAlbum('john lennon', 'imagine')
+#print(albumOne) 
 
-albumThree = makeAlbum('anuel aa', 'emmanuel', songs=10)
-print(albumThree)  
+#albumtwo = makeAlbum('alejandro fernandez', 'hecho en mexico')
+#print(albumtwo) 
+
+#albumThree = makeAlbum('anuel aa', 'emmanuel', songs=10)
+#print(albumThree)  
 
