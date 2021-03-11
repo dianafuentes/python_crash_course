@@ -1,2 +1,4 @@
 #ignore
 pcc_2e 
+.DS_Store
+__pycache__/

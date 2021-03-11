@@ -1,7 +1,8 @@
 import pygame 
 
+# classes have methods (aka functions)
 class Ship: 
-  "A class to manage the ship"
+  """A class to manage the ship"""
   def __init__(self, ai_game):
     self.screen = ai_game.screen 
     self.settings = ai_game.settings
@@ -22,7 +23,7 @@ class Ship:
     self.moving_left = False
 
   def update(self):
-    "update the ships position based on the movement flag."
+    """update the ships position based on the movement flag."""
     if self.moving_right and self.rect.right < self.screen_rect.right:
       self.x += self.settings.ship_speed
     if self.moving_left and self.rect.left > 0:
@@ -31,5 +32,5 @@ class Ship:
     self.rect.x = self.x 
   
   def blitme(self):
-    "Draw the ship at its current location."
+    """Draw the ship at its current location."""
     self.screen.blit(self.image, self.rect)
