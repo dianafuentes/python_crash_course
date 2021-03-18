@@ -35,20 +35,44 @@ class AlienInvasion:
     #Spacing between each alien is eaqual to one alien width. 
     # Make an alien. 
     alien = Alien(self)
-    alien_width = alien.rect.width 
+    alien_width, alien_height = alien.rect.size
     available_space_x = self.settings.screen_width - (2 * alien_width)
     number_aliens_x = available_space_x // (2 * alien_width)
 
-    #create the first row of aliens 
-    for alien_number in range(number_aliens_x):
-      #create an alien and place it in the row.
-      alien = Alien(self)
-      alien.x = alien_width + 2 * alien_width * alien_number
-      alien.rect.x = alien.x
-      self.aliens.add(alien)
+    #Determine the number of rows of aliens that fit on the screen 
+    ship_height = self.ship.rect.height 
+    available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+    number_rows = available_space_y // (2 * alien_height)
+
+    #Create the full fleet of aliens
+    for row_number in range(number_rows):
+      #create the first row of aliens 
+      for alien_number in range(number_aliens_x):
+        self._create_alien(alien_number, row_number)
+
+  def _create_alien(self, alien_number, row_number):
+    """create an alien and place it in the row"""
+    alien = Alien(self)
+    alien_width, alien_height = alien.rect.size
+    alien.x = alien_width + 2 * alien_width * alien_number
+    alien.rect.x = alien.x
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+    self.aliens.add(alien)
 
     #set background color. 
-    self.bg_color = (230,230,230)
+    self.bg_color = (230,230,230) 
+  
+  def _check_fleet_edges(self):
+    """Respond appropriately if any aliens have reached an edge."""
+    for alien in self.aliens.sprites():
+      self._change_fleet_direction()
+      break
+
+  def _change_fleet_direction(self):
+    """Drop the entire fleet and change the fleets direction"""
+    for alien in self.aliens.sprites():
+      alien.rect.y += self.settings.fleet_drop_speed
+    self.settings.fleet_direction *= -1 
   
   def run_game(self):
     """Start the main loop for the game"""
@@ -56,6 +80,7 @@ class AlienInvasion:
       self._check_events() 
       self.ship.update()
       self._update_bullets()
+      self._update_aliens()
       self._update_screen()
       
   def _update_bullets(self):
@@ -63,11 +88,23 @@ class AlienInvasion:
     #Update bullet position
     self.bullets.update() 
 
-    #get rid of bullets the have disappeared
-    for bullet in self.bullets.copy():
-      if bullet.rect.bottom <= 0:
-        self.bullets.remove(bullet)
-    # print(len(self.bullets))
+    # #get rid of bullets the have disappeared
+    # for bullet in self.bullets.copy():
+    #   if bullet.rect.bottom <= 0:
+    #     self.bullets.remove(bullet)
+    # # print(len(self.bullets))
+
+    #check for any bullets that have hit aliens.
+    # if so, get rid of the bullet and the alien
+    collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+
+  
+  def _update_aliens(self):
+    """ Check if the fleet is at an edge, then update the positions of all aliens in the fleet"""
+    self._check_fleet_edges()
+    """Update the position of al; aliens in the fleet"""
+    self.aliens.update()
 
   def _check_events(self):
     """Respond to keypresses and mousen events"""
