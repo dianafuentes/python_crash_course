@@ -29,7 +29,6 @@ class AlienInvasion:
 
     #Create an instace to store game statistics
     self.stats = GameStats(self)
-
     self.ship = Ship(self)
     self.bullets = pygame.sprite.Group()
     self.aliens = pygame.sprite.Group()
@@ -86,9 +85,12 @@ class AlienInvasion:
     """Start the main loop for the game"""
     while True:
       self._check_events() 
-      self.ship.update()
-      self._update_bullets()
-      self._update_aliens()
+      
+      if self.stats.game_active:
+        self.ship.update()
+        self._update_bullets()
+        self._update_aliens()
+      
       self._update_screen()
       
   def _update_bullets(self):
@@ -126,20 +128,35 @@ class AlienInvasion:
     #look for alien-ship collisions. 
     if pygame.sprite.spritecollideany(self.ship, self.aliens):
       self._ship_hit()
+    
+    #look for aliens hitting the bottom of the screen 
+    self._check_aliens_bottom()
   
   def _ship_hit(self):
     """Respond to the ship being hit by an alien."""
-    # Decrement ships_left
-    self.stats.ships_left -= 1
-    # Get rid of any remaining aliens and bullets 
-    self.aliens.empty()
-    self.bullets.empty()
-    # Create a new fleet and center the ship
-    self._create_fleet()
-    self.ship.center_ship()
-    # Pause 
-    sleep(0.5)
+    if self.stats.ships_left > 0:
+      # Decrement ships_left
+      self.stats.ships_left -= 1
+      # Get rid of any remaining aliens and bullets 
+      self.aliens.empty()
+      self.bullets.empty()
+      # Create a new fleet and center the ship
+      self._create_fleet()
+      self.ship.center_ship()
+      # Pause 
+      sleep(0.5)
+    else: 
+      self.stats.game_active = False
 
+  def _check_aliens_bottom(self):
+    """Check if any aliens have reached the bottom of the screen."""
+    screen_rect = self.screen.get_rect()
+
+    for alien in self.aliens.sprites():
+      if alien.rect.bottom >= screen_rect.bottom:
+        #Treat this the same as if the ship got hit 
+        self._ship_hit()
+        break 
 
   def _check_events(self):
     """Respond to keypresses and mousen events"""
