@@ -1,21 +1,12 @@
 import sys 
-
 from time import sleep
-
 import pygame
-
 from settings import Settings 
-
 from gameStats import GameStats
-
 from scoreboard import Scoreboard
-
 from button import Button 
-
 from ship import Ship
-
 from bullet import Bullet
-
 from alien import Alien 
 
 class AlienInvasion:
@@ -135,6 +126,10 @@ class AlienInvasion:
       self.bullets.empty()
       self._create_fleet()
       self.settings.increase_speed()
+
+      #Increase level 
+      self.stats.level += 1 
+      self.sb.prep_level()
   
   def _update_aliens(self):
     """ Check if the fleet is at an edge, then update the positions of all aliens in the fleet"""
@@ -198,6 +193,7 @@ class AlienInvasion:
       self.stats.reset_stats()
       self.stats.game_active = True 
       self.sb.prep_score()
+      self.sb.prep_level()
       #hide the mouse cursor 
       pygame.mouse.set_visible(False)
 
