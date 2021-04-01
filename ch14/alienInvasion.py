@@ -146,8 +146,9 @@ class AlienInvasion:
   def _ship_hit(self):
     """Respond to the ship being hit by an alien."""
     if self.stats.ships_left > 0:
-      # Decrement ships_left
+      # Decrement ships_left and update scoreboard
       self.stats.ships_left -= 1
+      self.sb.prep_ships
       # Get rid of any remaining aliens and bullets 
       self.aliens.empty()
       self.bullets.empty()
@@ -175,6 +176,8 @@ class AlienInvasion:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         sys.exit() 
+      elif event.type == pygame.KEYDOWN:
+        self._check_keydown_events(event)
       elif event.type == pygame.MOUSEBUTTONDOWN:
         mouse_pos = pygame.mouse.get_pos()
         self._check_play_button(mouse_pos)
@@ -194,6 +197,7 @@ class AlienInvasion:
       self.stats.game_active = True 
       self.sb.prep_score()
       self.sb.prep_level()
+      self.sb.prep_ships()
       #hide the mouse cursor 
       pygame.mouse.set_visible(False)
 
